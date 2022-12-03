@@ -594,7 +594,8 @@ public class Board extends JPanel
   int lastPelletEatenY=0;
 
   /* This is the font used for the menus */
-  Font font = new Font("Monospaced",Font.BOLD, 12);
+
+  Font font = new Font("Serif",Font.BOLD, 12);
 
   /* Constructor initializes state flags etc.*/
   public Board() 
