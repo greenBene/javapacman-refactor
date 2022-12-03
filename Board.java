@@ -1,6 +1,5 @@
 /* Drew Schuster */
 import java.awt.*;
-import javax.imageio.*;
 import javax.swing.JPanel;
 import java.lang.Math;
 import java.util.*;
@@ -332,7 +331,70 @@ class Player extends Mover
     pelletX = x/gridSize-1;
     pelletY = y/gridSize-1;
     }
-  } 
+  }
+
+  void printPlayer(Graphics g, Board board) {
+    if (frameCount < 5)
+    {
+      /* Draw mouth closed */
+      g.drawImage(board.pacmanImage, this.x, this.y,Color.BLACK,null);
+    }
+    else
+    {
+      /* Draw mouth open in appropriate direction */
+      if (frameCount >=10)
+        frameCount=0;
+
+      switch(currDirection)
+      {
+        case 'L':
+           g.drawImage(board.pacmanLeftImage, this.x, this.y,Color.BLACK,null);
+           break;
+        case 'R':
+           g.drawImage(board.pacmanRightImage, this.x, this.y,Color.BLACK,null);
+           break;
+        case 'U':
+           g.drawImage(board.pacmanUpImage, this.x, this.y,Color.BLACK,null);
+           break;
+        case 'D':
+           g.drawImage(board.pacmanDownImage, this.x, this.y,Color.BLACK,null);
+           break;
+      }
+    }
+  }
+
+  boolean detectCollision(boolean oops, Board board) {
+    if (this.x == board.ghost1.x && Math.abs(this.y- board.ghost1.y) < 10)
+      oops =true;
+    else if (this.x == board.ghost2.x && Math.abs(this.y- board.ghost2.y) < 10)
+      oops =true;
+    else if (this.x == board.ghost3.x && Math.abs(this.y- board.ghost3.y) < 10)
+      oops =true;
+    else if (this.x == board.ghost4.x && Math.abs(this.y- board.ghost4.y) < 10)
+      oops =true;
+    else if (this.y == board.ghost1.y && Math.abs(this.x- board.ghost1.x) < 10)
+      oops =true;
+    else if (this.y == board.ghost2.y && Math.abs(this.x- board.ghost2.x) < 10)
+      oops =true;
+    else if (this.y == board.ghost3.y && Math.abs(this.x- board.ghost3.x) < 10)
+      oops =true;
+    else if (this.y == board.ghost4.y && Math.abs(this.x- board.ghost4.x) < 10)
+      oops =true;
+    return oops;
+  }
+
+  void drawPacmanDamage(Graphics g, Board board) {
+    if (board.dying == 4)
+      g.fillRect(this.x, this.y,20,7);
+    else if ( board.dying == 3)
+      g.fillRect(this.x, this.y,20,14);
+    else if ( board.dying == 2)
+      g.fillRect(this.x, this.y,20,20);
+    else if ( board.dying == 1)
+    {
+      g.fillRect(this.x, this.y,20,20);
+    }
+  }
 }
 
 /* Ghost class controls the ghost. */
@@ -512,25 +574,25 @@ public class Board extends JPanel
   /* For JAR File*/
   /*
   Image pacmanImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacman.jpg"));
-  Image pacmanUpImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanup.jpg")); 
-  Image pacmanDownImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmandown.jpg")); 
-  Image pacmanLeftImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanleft.jpg")); 
-  Image pacmanRightImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanright.jpg")); 
-  Image ghost10 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost10.jpg")); 
-  Image ghost20 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost20.jpg")); 
-  Image ghost30 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost30.jpg")); 
-  Image ghost40 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost40.jpg")); 
-  Image ghost11 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost11.jpg")); 
-  Image ghost21 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost21.jpg")); 
-  Image ghost31 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost31.jpg")); 
-  Image ghost41 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost41.jpg")); 
-  Image titleScreenImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/titleScreen.jpg")); 
-  Image gameOverImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/gameOver.jpg")); 
+  Image pacmanUpImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanup.jpg"));
+  Image pacmanDownImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmandown.jpg"));
+  Image pacmanLeftImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanleft.jpg"));
+  Image pacmanRightImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/pacmanright.jpg"));
+  Image ghost10 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost10.jpg"));
+  Image ghost20 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost20.jpg"));
+  Image ghost30 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost30.jpg"));
+  Image ghost40 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost40.jpg"));
+  Image ghost11 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost11.jpg"));
+  Image ghost21 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost21.jpg"));
+  Image ghost31 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost31.jpg"));
+  Image ghost41 = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/ghost41.jpg"));
+  Image titleScreenImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/titleScreen.jpg"));
+  Image gameOverImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/gameOver.jpg"));
   Image winScreenImage = Toolkit.getDefaultToolkit().getImage(Pacman.class.getResource("img/winScreen.jpg"));
   */
   /* For NOT JAR file*/
-  Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg"); 
-  Image pacmanUpImage = Toolkit.getDefaultToolkit().getImage("img/pacmanup.jpg"); 
+  Image pacmanImage = Toolkit.getDefaultToolkit().getImage("img/pacman.jpg");
+  Image pacmanUpImage = Toolkit.getDefaultToolkit().getImage("img/pacmanup.jpg");
   Image pacmanDownImage = Toolkit.getDefaultToolkit().getImage("img/pacmandown.jpg"); 
   Image pacmanLeftImage = Toolkit.getDefaultToolkit().getImage("img/pacmanleft.jpg"); 
   Image pacmanRightImage = Toolkit.getDefaultToolkit().getImage("img/pacmanright.jpg"); 
@@ -881,16 +943,7 @@ public class Board extends JPanel
       g.setColor(Color.BLACK);
       
       /* Kill the pacman */
-      if (dying == 4)
-        g.fillRect(player.x,player.y,20,7);
-      else if ( dying == 3)
-        g.fillRect(player.x,player.y,20,14);
-      else if ( dying == 2)
-        g.fillRect(player.x,player.y,20,20); 
-      else if ( dying == 1)
-      {
-        g.fillRect(player.x,player.y,20,20); 
-      }
+      player.drawPacmanDamage(g, this);
      
       /* Take .1 seconds on each frame of death, and then take 2 seconds
          for the final frame to allow for the sound effect to end */ 
@@ -1050,22 +1103,7 @@ public class Board extends JPanel
 
 
     /* Detect collisions */
-    if (player.x == ghost1.x && Math.abs(player.y-ghost1.y) < 10)
-      oops=true;
-    else if (player.x == ghost2.x && Math.abs(player.y-ghost2.y) < 10)
-      oops=true;
-    else if (player.x == ghost3.x && Math.abs(player.y-ghost3.y) < 10)
-      oops=true;
-    else if (player.x == ghost4.x && Math.abs(player.y-ghost4.y) < 10)
-      oops=true;
-    else if (player.y == ghost1.y && Math.abs(player.x-ghost1.x) < 10)
-      oops=true;
-    else if (player.y == ghost2.y && Math.abs(player.x-ghost2.x) < 10)
-      oops=true;
-    else if (player.y == ghost3.y && Math.abs(player.x-ghost3.x) < 10)
-      oops=true;
-    else if (player.y == ghost4.y && Math.abs(player.x-ghost4.x) < 10)
-      oops=true;
+    oops = player.detectCollision(oops, this);
 
     /* Kill the pacman */
     if (oops && !stopped)
@@ -1184,37 +1222,12 @@ public class Board extends JPanel
     }
 
     /* Draw the pacman */
-    if (player.frameCount < 5)
-    {
-      /* Draw mouth closed */
-      g.drawImage(pacmanImage,player.x,player.y,Color.BLACK,null);
-    }
-    else
-    {
-      /* Draw mouth open in appropriate direction */
-      if (player.frameCount >=10)
-        player.frameCount=0;
-
-      switch(player.currDirection)
-      {
-        case 'L':
-           g.drawImage(pacmanLeftImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'R':
-           g.drawImage(pacmanRightImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'U':
-           g.drawImage(pacmanUpImage,player.x,player.y,Color.BLACK,null);
-           break;     
-        case 'D':
-           g.drawImage(pacmanDownImage,player.x,player.y,Color.BLACK,null);
-           break;     
-      }
-    }
+    player.printPlayer(g, this);
 
     /* Draw the border around the game in case it was overwritten by ghost movement or something */
     g.setColor(Color.WHITE);
     g.drawRect(19,19,382,382);
 
   }
+
 }
