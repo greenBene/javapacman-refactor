@@ -9,7 +9,7 @@ import java.lang.*;
 
 /* This class contains the entire game... most of the game logic is in the Board class but this
    creates the gui and captures mouse and keyboard input, as well as controls the game states */
-public class Pacman extends JApplet implements MouseListener, KeyListener
+public class Pacman extends JApplet implements KeyListener
 { 
 
   /* These timers are used to kill title, game over, and victory screens after a set idle period (5 seconds)*/
@@ -36,7 +36,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
     f.add(b,BorderLayout.CENTER);
 
     /*Set listeners for mouse actions and button clicks*/
-    b.addMouseListener(this);  
+    b.addMouseListener(new PacmanMouseListener(b));
     b.addKeyListener(this);  
 
     /* Make frame visible, disable resizing */
@@ -69,18 +69,7 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
   */
   public void repaint()
   {
-    if (b.player.teleport)
-    {
-      b.repaint(b.player.lastX-20,b.player.lastY-20,80,80);
-      b.player.teleport=false;
-    }
-    b.repaint(0,0,600,20);
-    b.repaint(0,420,600,40);
-    b.repaint(b.player.x-20,b.player.y-20,80,80);
-    b.repaint(b.ghost1.x-20,b.ghost1.y-20,80,80);
-    b.repaint(b.ghost2.x-20,b.ghost2.y-20,80,80);
-    b.repaint(b.ghost3.x-20,b.ghost3.y-20,80,80);
-    b.repaint(b.ghost4.x-20,b.ghost4.y-20,80,80);
+    b.repaintBoard();
   }
 
   /* Steps the screen forward one frame */
@@ -261,42 +250,6 @@ public class Pacman extends JApplet implements MouseListener, KeyListener
     repaint();
   }
 
-  /* This function detects user clicks on the menu items on the bottom of the screen */
-  public void mousePressed(MouseEvent e){
-    if (b.titleScreen || b.winScreen || b.overScreen)
-    {
-      /* If we aren't in the game where a menu is showing, ignore clicks */
-      return;
-    }
-
-    /* Get coordinates of click */
-    int x = e.getX();
-    int y = e.getY();
-    if ( 400 <= y && y <= 460)
-    {
-      if ( 100 <= x && x <= 150)
-      {
-        /* New game has been clicked */
-        b.New = 1;
-      }
-      else if (180 <= x && x <= 300)
-      {
-        /* Clear high scores has been clicked */
-        b.clearHighScores();
-      }
-      else if (350 <= x && x <= 420)
-      {
-        /* Exit has been clicked */
-        System.exit(0);
-      }
-    }
-  }
-  
- 
-  public void mouseEntered(MouseEvent e){}
-  public void mouseExited(MouseEvent e){}
-  public void mouseReleased(MouseEvent e){}
-  public void mouseClicked(MouseEvent e){}
   public void keyReleased(KeyEvent e){}
   public void keyTyped(KeyEvent e){}
   

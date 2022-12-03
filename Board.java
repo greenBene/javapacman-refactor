@@ -672,6 +672,21 @@ public class Board extends JPanel
     titleScreen = true;
   }
 
+  public void repaintBoard(){
+    if (player.teleport)
+    {
+      repaint(player.lastX-20,player.lastY-20,80,80);
+      player.teleport=false;
+    }
+    repaint(0,0,600,20);
+    repaint(0,420,600,40);
+    repaint(player.x-20,player.y-20,80,80);
+    repaint(ghost1.x-20,ghost1.y-20,80,80);
+    repaint(ghost2.x-20,ghost2.y-20,80,80);
+    repaint(ghost3.x-20,ghost3.y-20,80,80);
+    repaint(ghost4.x-20,ghost4.y-20,80,80);
+  }
+
   /* Reads the high scores file and saves it */
   public void initHighScores()
   {
@@ -984,37 +999,21 @@ public class Board extends JPanel
     /* If this is the title screen, draw the title screen and return */
     if (titleScreen)
     {
-      g.setColor(Color.BLACK);
-      g.fillRect(0,0,600,600);
-      g.drawImage(titleScreenImage,0,0,Color.BLACK,null);
-
-      /* Stop any pacman eating sounds */
-      sounds.nomNomStop();
-      New = 1;
+      stopGame(titleScreenImage, g);
       return;
     } 
 
     /* If this is the win screen, draw the win screen and return */
     else if (winScreen)
     {
-      g.setColor(Color.BLACK);
-      g.fillRect(0,0,600,600);
-      g.drawImage(winScreenImage,0,0,Color.BLACK,null);
-      New = 1;
-      /* Stop any pacman eating sounds */
-      sounds.nomNomStop();
+      stopGame(winScreenImage, g);
       return;
     }
 
     /* If this is the game over screen, draw the game over screen and return */
     else if (overScreen)
     {
-      g.setColor(Color.BLACK);
-      g.fillRect(0,0,600,600);
-      g.drawImage(gameOverImage,0,0,Color.BLACK,null);
-      New = 1;
-      /* Stop any pacman eating sounds */
-      sounds.nomNomStop();
+      stopGame(gameOverImage, g);
       return;
     }
 
@@ -1228,6 +1227,16 @@ public class Board extends JPanel
     g.setColor(Color.WHITE);
     g.drawRect(19,19,382,382);
 
+  }
+
+  private void stopGame(Image image, Graphics g) {
+    g.setColor(Color.BLACK);
+    g.fillRect(0,0,600,600);
+    g.drawImage(image,0,0,Color.BLACK,null);
+
+    /* Stop any pacman eating sounds */
+    sounds.nomNomStop();
+    New = 1;
   }
 
 }
